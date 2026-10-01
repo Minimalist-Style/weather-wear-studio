@@ -28,9 +28,11 @@ describe('Diary CSV Import', () => {
     expect(() => parseCsvImport(csv)).toThrow('missing_columns');
   });
 
-  it('should handle commas in quotes gracefully (basic check)', () => {
-    const csv = `date,temperature_c,weather_code,wind_kmh,comfort,note\n2026-10-01,15,3,0,right,"Hello, world"`;
+  it('should handle commas in quotes and newlines (round-trip)', () => {
+    const csv = `date,temperature_c,weather_code,wind_kmh,comfort,note\n2026-10-01,15,3,0,right,"Hello, world\nLine 2"`;
     const entries = parseCsvImport(csv);
-    expect(entries[0].note).toBe('Hello, world');
+    expect(entries[0].note).toBe('Hello, world\nLine 2');
+    expect(entries[0].code).toBe(3);
+    expect(entries[0].temp).toBe(15);
   });
 });
