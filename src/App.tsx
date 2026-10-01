@@ -713,9 +713,6 @@ export default function App() {
                   )}
                   {kind === "sun" && <div className="fx-sun" />}
                   {kind === "snow" && <div className="fx-snow" />}
-                  {(kind === "rain" || kind === "storm") && (
-                    <div className="fx-rain" />
-                  )}
                 </div>
                 <div className="weather-top">
                   <div>
