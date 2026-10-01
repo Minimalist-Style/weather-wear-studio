@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import {
   CloudSun,
   MapPin,
@@ -325,6 +325,48 @@ export default function App() {
     return () => observer.disconnect();
   }, []);
 
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoUnlocked, setVideoUnlocked] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!videoRef.current || !videoRef.current.duration) return;
+      const v = videoRef.current;
+      const progress = Math.min(
+        Math.max(window.scrollY / window.innerHeight, 0),
+        1
+      );
+      requestAnimationFrame(() => {
+        if (v.duration) {
+          v.currentTime = progress * v.duration;
+        }
+      });
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const unlockVideo = () => {
+    if (!videoUnlocked && videoRef.current) {
+      videoRef.current
+        .play()
+        .then(() => {
+          videoRef.current?.pause();
+        })
+        .catch(() => {});
+      setVideoUnlocked(true);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("touchstart", unlockVideo, { once: true });
+    window.addEventListener("click", unlockVideo, { once: true });
+    return () => {
+      window.removeEventListener("touchstart", unlockVideo);
+      window.removeEventListener("click", unlockVideo);
+    };
+  }, [videoUnlocked]);
+
   const [lang, setLang] = useState<Lang>("kk"),
     [city, setCity] = useState<City>(getSavedCity),
     [forecast, setForecast] = useState<WeatherData | null>(null),
@@ -548,6 +590,14 @@ export default function App() {
   };
   return (
     <div className="app">
+      <video
+        ref={videoRef}
+        src="/bg-atmosphere.mp4"
+        className="scroll-video-bg"
+        muted
+        playsInline
+        preload="auto"
+      />
       <div className="atmosphere" aria-hidden="true" />
       <header className="topbar wrap">
         <a className="brand" href="#home" aria-label="Weather and Wear home">

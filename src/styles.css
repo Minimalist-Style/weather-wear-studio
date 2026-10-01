@@ -1620,6 +1620,22 @@ p {
   .fx-rain::after {
     animation: none !important;
   }
+  .scroll-video-bg {
+    display: none !important;
+  }
+}
+
+.scroll-video-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  opacity: 0.25;
+  pointer-events: none;
+  object-fit: cover;
+  filter: blur(8px);
 }
 
 .garments-fade-enter {
