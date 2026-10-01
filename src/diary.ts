@@ -75,3 +75,5 @@ export function parseCsvImport(text: string): DiaryEntry[] {
   }
   return entries;
 }
+
+export const countUniqueDays = (entries: DiaryEntry[]) => new Set(entries.map(e => e.date)).size;
