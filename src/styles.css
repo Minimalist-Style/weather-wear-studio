@@ -266,6 +266,9 @@ p {
   right: 50px;
   background: radial-gradient(circle at 37% 33%, #ffe9a5, #f8c885);
   box-shadow: 0 0 60px 25px #fff3b477;
+  transform: translateZ(0);
+  will-change: transform;
+  animation: float-sun 7s ease-in-out infinite alternate;
 }
 .art-cloud {
   background: #fffdf7;
@@ -286,6 +289,9 @@ p {
   height: 57px;
   left: 67px;
   top: 126px;
+  transform: translateZ(0);
+  will-change: transform;
+  animation: float-cloud-left 9s ease-in-out infinite alternate;
 }
 .art-cloud.a:before {
   width: 92px;
@@ -305,6 +311,10 @@ p {
   right: 34px;
   top: 233px;
   opacity: 0.8;
+  transform: translateZ(0);
+  will-change: transform;
+  animation: float-cloud-right 11s ease-in-out infinite alternate;
+  animation-delay: 1s;
 }
 .art-cloud.b:before {
   width: 66px;
@@ -336,6 +346,9 @@ p {
   width: 180px;
   height: 268px;
   filter: drop-shadow(15px 24px 18px #3c6b6677);
+  transform: translateZ(0);
+  will-change: transform;
+  animation: float-figure 6s ease-in-out infinite alternate;
 }
 .figure-hood {
   position: absolute;
@@ -1705,5 +1718,34 @@ p {
 @media (max-width: 710px) {
   .mobile-reverse-wrap {
     flex-direction: column-reverse;
+  }
+}
+
+@keyframes float-sun {
+  from { transform: translateZ(0) translateY(0) scale(1); }
+  to { transform: translateZ(0) translateY(-8px) scale(1.03); }
+}
+
+@keyframes float-cloud-left {
+  from { transform: translateZ(0) translateY(0) translateX(0); }
+  to { transform: translateZ(0) translateY(-10px) translateX(4px); }
+}
+
+@keyframes float-cloud-right {
+  from { transform: translateZ(0) translateY(0) translateX(0); }
+  to { transform: translateZ(0) translateY(-6px) translateX(-5px); }
+}
+
+@keyframes float-figure {
+  from { transform: translateZ(0) translateY(0); }
+  to { transform: translateZ(0) translateY(-3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .art-sun,
+  .art-cloud.a,
+  .art-cloud.b,
+  .art-figure {
+    animation: none !important;
   }
 }
