@@ -1,0 +1,5 @@
+import type {DiaryEntry} from './types';
+export const DIARY_KEY='ww-studio-diary-v2';
+export function readDiary():DiaryEntry[]{try{const x=JSON.parse(localStorage.getItem(DIARY_KEY)||'[]');return Array.isArray(x)?x.filter((v)=>v&&typeof v.id==='string'&&typeof v.date==='string'&&Number.isFinite(v.temp)).slice(0,100):[]}catch{return[]}}
+export function writeDiary(entries:DiaryEntry[]){localStorage.setItem(DIARY_KEY,JSON.stringify(entries.slice(0,100)))}
+export function exportDiary(entries:DiaryEntry[]){const q=(value:string|number)=>'"'+String(value).replaceAll('"','""')+'"';const rows=[['date','temperature_c','weather_code','wind_kmh','comfort','note'],...entries.map(x=>[x.date,x.temp,x.code,x.wind,x.comfort,x.note])];const csv='\uFEFF'+rows.map(row=>row.map(q).join(',')).join('\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='weather-wear-observations.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
