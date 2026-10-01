@@ -694,15 +694,6 @@ export default function App() {
                 }
               >
                 <div className="weather-bg-fx">
-                  <video
-                    src="/bg-atmosphere.mp4"
-                    className="weather-video"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                  />
-                  <div className="video-overlay" />
                   <div className="night-overlay" />
                   {(kind === "cloud" || kind === "fog") && (
                     <div className={`fx-cloud ${active?.wind && active.wind > 20 ? "windy" : ""}`} />
