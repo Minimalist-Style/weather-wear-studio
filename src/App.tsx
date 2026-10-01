@@ -37,7 +37,13 @@ import type {
 } from "./types";
 import { weatherKind, recommend } from "./recommend";
 import { getWeather, initialCity, searchCities } from "./weather";
-import { readDiary, writeDiary, exportDiary, parseCsvImport, countUniqueDays } from "./diary";
+import {
+  readDiary,
+  writeDiary,
+  exportDiary,
+  parseCsvImport,
+  countUniqueDays,
+} from "./diary";
 const SCENARIOS = [
   {
     id: "frost",
@@ -160,7 +166,8 @@ const c: Record<Lang, Record<string, string>> = {
     simulationEdit: "СИМУЛЯЦИЯ НӘТИЖЕСІ",
     newObservation: "ЖАҢА БАҚЫЛАУ",
     researchProgress: "ЗЕРТТЕУ ПРОГРЕСІ",
-    progressWait: "Айырмашылықты талдау деректер жиналғаннан кейін қолжетімді болады.",
+    progressWait:
+      "Айырмашылықты талдау деректер жиналғаннан кейін қолжетімді болады.",
     progressDays: "КҮН",
   },
   en: {
@@ -248,7 +255,8 @@ const c: Record<Lang, Record<string, string>> = {
     simulationEdit: "SIMULATION EDIT",
     newObservation: "NEW OBSERVATION",
     researchProgress: "RESEARCH PROGRESS",
-    progressWait: "Difference from forecast will be available after collecting data.",
+    progressWait:
+      "Difference from forecast will be available after collecting data.",
     progressDays: "DAYS",
   },
 };
@@ -299,6 +307,24 @@ function WeatherIcon({ code, size = 30 }: { code: number; size?: number }) {
   return <I size={size} strokeWidth={1.5} aria-hidden="true" />;
 }
 export default function App() {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+    document
+      .querySelectorAll(".reveal-on-scroll")
+      .forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   const [lang, setLang] = useState<Lang>("kk"),
     [city, setCity] = useState<City>(getSavedCity),
     [forecast, setForecast] = useState<WeatherData | null>(null),
@@ -611,7 +637,7 @@ export default function App() {
               <span className="art-mark two">W/W · 26</span>
             </div>
           </section>
-          <section className="dashboard wrap" id="today">
+          <section className="dashboard wrap reveal-on-scroll" id="today">
             <div className="section-top">
               <div>
                 <span className="section-number">{tx.liveSection}</span>
@@ -668,9 +694,11 @@ export default function App() {
                 }
               >
                 <div className="weather-bg-fx">
-                  {(kind === "sun" || kind === "cloud") && (
-                    <div className="fx-sun" />
+                  <div className="night-overlay" />
+                  {(kind === "cloud" || kind === "fog") && (
+                    <div className={`fx-cloud ${active?.wind && active.wind > 20 ? "windy" : ""}`} />
                   )}
+                  {kind === "sun" && <div className="fx-sun" />}
                   {kind === "snow" && <div className="fx-snow" />}
                   {(kind === "rain" || kind === "storm") && (
                     <div className="fx-rain" />
@@ -717,17 +745,19 @@ export default function App() {
                   {rec?.title ?? tx.loading}
                   <span className="outfit-spark">✴</span>
                 </div>
-                <div className="garments">
-                  {rec?.items.map((item, i) => (
-                    <div className="garment" key={i}>
-                      <span>{item.icon}</span>
-                      <b>{item[lang]}</b>
-                    </div>
-                  ))}
-                </div>
-                <div className="outfit-reason">
-                  <span>✺ {tx.why}</span>
-                  <p>{rec?.reason ?? tx.noForecast}</p>
+                <div className="garments-fade-enter" key={rec?.title}>
+                  <div className="garments">
+                    {rec?.items.map((item, i) => (
+                      <div className="garment" key={i}>
+                        <span>{item.icon}</span>
+                        <b>{item[lang]}</b>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="outfit-reason">
+                    <span>✺ {tx.why}</span>
+                    <p>{rec?.reason ?? tx.noForecast}</p>
+                  </div>
                 </div>
               </article>
             </div>
@@ -755,7 +785,7 @@ export default function App() {
             )}
           </section>
         </div>
-        <section className="forecast-section wrap" id="forecast">
+        <section className="forecast-section wrap reveal-on-scroll" id="forecast">
           <div className="section-top">
             <div>
               <span className="section-number">{tx.forecastSection}</span>
@@ -811,12 +841,10 @@ export default function App() {
             )}
           </div>
         </section>
-        <section className="lab-section" id="lab">
+        <section className="lab-section reveal-on-scroll" id="lab">
           <div className="wrap lab-layout">
             <div className="lab-copy">
-              <span className="section-number lime">
-                {tx.labSection}
-              </span>
+              <span className="section-number lime">{tx.labSection}</span>
               <div className="lab-emblem">
                 <FlaskConical size={33} />
               </div>
@@ -943,17 +971,19 @@ export default function App() {
                       <span>✳</span>
                     </div>
                     <h3 style={{ margin: "8px 0" }}>{rec?.title}</h3>
-                    <div className="garments">
-                      {rec?.items.map((item, i) => (
-                        <div className="garment" key={i}>
-                          <span>{item.icon}</span>
-                          <b>{item[lang]}</b>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="outfit-reason">
-                      <span>✺ {tx.why}</span>
-                      <p>{rec?.reason}</p>
+                    <div className="garments-fade-enter" key={rec?.title}>
+                      <div className="garments">
+                        {rec?.items.map((item, i) => (
+                          <div className="garment" key={i}>
+                            <span>{item.icon}</span>
+                            <b>{item[lang]}</b>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="outfit-reason">
+                        <span>✺ {tx.why}</span>
+                        <p>{rec?.reason}</p>
+                      </div>
                     </div>
                   </article>
                 </div>
@@ -962,7 +992,7 @@ export default function App() {
             </div>
           </div>
         </section>
-        <section className="diary-section wrap" id="diary">
+        <section className="diary-section wrap reveal-on-scroll" id="diary">
           <div className="section-top">
             <div>
               <span className="section-number">{tx.diarySection}</span>
@@ -1144,7 +1174,10 @@ export default function App() {
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <b>{tx.researchProgress}</b>
-                  <span>{Math.min(countUniqueDays(entries), 14)}/14 {tx.progressDays}</span>
+                  <span>
+                    {Math.min(countUniqueDays(entries), 14)}/14{" "}
+                    {tx.progressDays}
+                  </span>
                 </div>
                 <div className="progress-bar">
                   <div
@@ -1160,7 +1193,7 @@ export default function App() {
             </div>
           </div>
         </section>
-        <section className="about-section wrap" id="about">
+        <section className="about-section wrap reveal-on-scroll" id="about">
           <div className="about-mark">✳</div>
           <div>
             <span className="section-number">{tx.researchSection}</span>
