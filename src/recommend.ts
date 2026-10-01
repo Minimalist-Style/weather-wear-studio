@@ -13,16 +13,17 @@ const coat=g('🧥','Жылы пальто','Warm coat'), jacket=g('🧥','Кү�
 export function recommend(w:Weather,lang:Lang){
  const effective=Math.min(w.temp,Number.isFinite(w.feels)?w.feels:w.temp),kind=weatherKind(w.code);
  let items:Garment[];let title:string;let baseRule:string;
- if(effective<=0){items=[coat,boots,gloves];title=lang==='kk'?'Жылы киінейік':'Bundle up'; baseRule=lang==='kk'?'Негізгі ереже: 0°C-тан төмен кезде қалың пальто мен қолғап қажет.':'Base rule: Below 0°C requires a heavy coat and gloves.';}
+ if(effective<=-10){items=[coat,boots,gloves];title=lang==='kk'?'Өте жылы киінейік':'Bundle up heavily'; baseRule=lang==='kk'?'Негізгі ереже: -10°C және одан төмен кезде ең қалың қыстық киім қажет.':'Base rule: At or below -10°C, heaviest winter gear is needed.';}
+ else if(effective<=0){items=[coat,boots,gloves];title=lang==='kk'?'Жылы киінейік':'Wear warm clothes'; baseRule=lang==='kk'?'Негізгі ереже: -9°C пен 0°C аралығында қалың пальто мен қолғап киген жөн.':'Base rule: Between -9°C and 0°C, a heavy coat and gloves are advised.';}
  else if(effective<=10){items=[jacket,shoes];title=lang==='kk'?'Күрте керек':'Grab a jacket'; baseRule=lang==='kk'?'Негізгі ереже: 1°C пен 10°C аралығында орташа жылы күрте киген жөн.':'Base rule: Between 1°C and 10°C, a mid-weight jacket is optimal.';}
  else if(effective<=17){items=[light,shoes];title=lang==='kk'?'Жеңіл қабат жеткілікті':'A light layer works'; baseRule=lang==='kk'?'Негізгі ереже: 11°C пен 17°C аралығында жеңіл күрте жеткілікті.':'Base rule: Between 11°C and 17°C, a light jacket is enough.';}
- else{items=[tee,shoes];title=lang==='kk'?'Жеңіл киін':'Keep it light'; baseRule=lang==='kk'?'Негізгі ереже: 18°C-тан жоғарыда жаздық киім ыңғайлы.':'Base rule: Above 18°C, summer clothes are comfortable.';}
+ else if(effective<=24){items=[tee,shoes];title=lang==='kk'?'Жеңіл киін':'Keep it light'; baseRule=lang==='kk'?'Негізгі ереже: 18°C пен 24°C аралығында жаздық киім ыңғайлы.':'Base rule: Between 18°C and 24°C, summer clothes are comfortable.';}
+ else{items=[tee,shoes,cap];title=lang==='kk'?'Ыстық ауа райы':'Hot weather'; baseRule=lang==='kk'?'Негізгі ереже: 25°C және одан жоғарыда күннен қорғану маңызды.':'Base rule: 25°C and above, sun protection is important.';}
  const notes:string[]=[baseRule];
  if(kind==='rain'||kind==='storm'){items.push(umbrella);notes.push(lang==='kk'?'Жауын-шашын: су өткізбейтін қабат немесе қолшатыр ал.':'Precipitation: bring a waterproof layer or umbrella.')}
  if(kind==='snow'){if(!items.includes(boots))items.push(boots);notes.push(lang==='kk'?'Қар: табаны таймайтын жылы аяқ киім таңда.':'Snow: choose warm, grippy footwear.')}
  if(w.wind>=25){if(effective>10)items.push(layer);notes.push(lang==='kk'?'Қатты жел (25 км/сағ+): жылуды ұстап қалу үшін қосымша қабат қажет.':'High wind (25+ km/h): an extra layer blocks wind chill.')}
- if(w.temp>=25){items.push(cap);notes.push(lang==='kk'?'Ыстық ауа райы: күннен қорғайтын бас киім киіп, су ішуді ұмытпа.':'Hot weather: wear a cap for sun protection and hydrate.')}
  if(!w.day)notes.push(lang==='kk'?'Түнде температура төмендеуі мүмкін.':'Temperatures may drop at night.');
- notes.push(lang==='kk'?'* Бұл — білім беру моделі. Өз қалауыңыз бен жағдайыңызға қарай бейімдеңіз.':'* Educational model. Adjust based on your personal comfort.');
+ notes.push(lang==='kk'?'* Бұл — білім беру моделі. Ол қауіпсіздікке кепілдік бермейді, өз қалауыңызға қарай бейімдеңіз.':'* Educational model. Does not guarantee safety; adjust to personal comfort.');
  return{title,items:[...new Set(items)],reason:notes.join(' ')};
 }

@@ -3,10 +3,16 @@ import {recommend,weatherKind} from './recommend';
 import type {Weather} from './types';
 const sample:Weather={temp:8,feels:8,wind:5,precip:0,code:3,day:true,time:''};
 describe('clothing matrix',()=>{
+  it('uses heavy coat and boots for extreme frost (effective <= -10)', () => {
+    const rec = recommend({...sample, temp: -10, feels: -10}, 'en');
+    expect(rec.items.some(x => x.en === 'Warm coat')).toBe(true);
+    expect(rec.reason).toContain('heaviest winter gear');
+  });
   it('uses a coat and boots for frost (effective <= 0)', () => {
     const rec = recommend({...sample, temp: 0, feels: 0}, 'en');
     expect(rec.items.some(x => x.en === 'Warm coat')).toBe(true);
     expect(rec.items.some(x => x.en === 'Warm boots')).toBe(true);
+    expect(rec.reason).toContain('-9°C and 0°C');
   });
   it('uses a jacket for cool weather (effective > 0 and <= 10)', () => {
     const rec1 = recommend({...sample, temp: 1, feels: 1}, 'en');
@@ -20,9 +26,15 @@ describe('clothing matrix',()=>{
     const rec17 = recommend({...sample, temp: 17, feels: 17}, 'en');
     expect(rec17.items.some(x => x.en === 'Light jacket')).toBe(true);
   });
-  it('uses light clothes for hot weather (effective > 17)', () => {
+  it('uses light clothes for warm weather (effective > 17 and <= 24)', () => {
     const rec18 = recommend({...sample, temp: 18, feels: 18}, 'en');
     expect(rec18.items.some(x => x.en === 'Light clothes')).toBe(true);
+    const rec24 = recommend({...sample, temp: 24, feels: 24}, 'en');
+    expect(rec24.items.some(x => x.en === 'Light clothes')).toBe(true);
+  });
+  it('handles heat and recommends cap (temp >= 25)', () => {
+    const rec25 = recommend({...sample, temp: 25, feels: 25}, 'en');
+    expect(rec25.items.some(x => x.en === 'Cap & water')).toBe(true);
   });
   it('adds an umbrella for rain',()=>expect(recommend({...sample,code:63},'en').items.some(x=>x.en==='Umbrella')).toBe(true));
   it('adds an extra layer for wind >= 25 when effective > 10', () => {
@@ -30,8 +42,8 @@ describe('clothing matrix',()=>{
   });
   it('recognizes snow',()=>expect(weatherKind(73)).toBe('snow'));
   it('uses effective temperature for frost',()=>expect(recommend({...sample,temp:3,feels:-3},'en').items.some(x=>x.en==='Warm coat')).toBe(true));
-  it('handles heat and recommends cap (temp >= 25)', () => {
-    const rec25 = recommend({...sample, temp: 25, feels: 25}, 'en');
-    expect(rec25.items.some(x => x.en === 'Cap & water')).toBe(true);
+  it('does not promise safety', () => {
+    const rec = recommend({...sample}, 'en');
+    expect(rec.reason).toContain('Does not guarantee safety');
   });
 });
