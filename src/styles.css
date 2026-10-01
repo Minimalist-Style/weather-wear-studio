@@ -1550,31 +1550,33 @@ p {
 .fx-rain {
   position: absolute;
   top: -100%;
-  left: 0;
-  width: 100%;
+  left: -50%;
+  width: 200%;
   height: 200%;
   background-image: linear-gradient(
-    170deg,
-    transparent 40%,
-    #ffffff88 40%,
-    transparent 60%
+    to bottom,
+    transparent 0%,
+    transparent 70%,
+    #ffffff88 70%,
+    transparent 100%
   );
-  background-size: 30px 60px;
-  animation: fall 1.2s linear infinite;
+  background-size: 30px 120px;
+  animation: fall 1s linear infinite;
+  transform: rotate(10deg);
 }
 .fx-rain::before {
   content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  background-image: linear-gradient(170deg, transparent 40%, #ffffff66 40%, transparent 60%);
-  background-size: 15px 45px;
+  background-image: linear-gradient(to bottom, transparent 0%, transparent 60%, #ffffff66 60%, transparent 100%);
+  background-size: 15px 90px;
   background-position: 10px 10px;
-  animation: fall 0.8s linear infinite;
+  animation: fall 0.7s linear infinite;
 }
 .fx-rain::after {
   content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  background-image: linear-gradient(170deg, transparent 40%, #ffffff33 40%, transparent 60%);
-  background-size: 20px 80px;
-  background-position: -20px 30px;
-  animation: fall 1.6s linear infinite;
+  background-image: linear-gradient(to bottom, transparent 0%, transparent 80%, #ffffff33 80%, transparent 100%);
+  background-size: 20px 150px;
+  background-position: 20px 30px;
+  animation: fall 1.4s linear infinite;
 }
 .fx-sun {
   position: absolute;
