@@ -326,7 +326,7 @@ p {
 
 .art-sun {
   width: 108px; height: 108px; border-radius: 50%;
-  position: absolute; top: 12%; right: 14%;
+  position: absolute; top: 12%; left: 50%; margin-left: -54px;
   background: radial-gradient(circle at 35% 30%, #fff9c4 0 7%, #ffe577 30%, #ffc53d 72%, #f3a91b 100%);
   box-shadow: 0 0 0 14px rgba(255,223,98,.16), 0 0 48px rgba(255,189,47,.5);
   transform: translate3d(calc(var(--mouse-x) * -15px), calc(var(--mouse-y) * -15px), -22px);
@@ -371,7 +371,7 @@ p {
 }
 
 .art-figure {
-  position: absolute; z-index: 4; width: 170px; height: 170px; bottom: 8%; left: 30%;
+  position: absolute; z-index: 4; width: 170px; height: 170px; bottom: 8%; left: 50%; margin-left: -85px;
   transform: translate3d(calc(var(--mouse-x) * 25px), calc(var(--mouse-y) * 12px), 42px);
   transition: transform .18s ease, filter .35s ease;
   animation: figureBreathe 4s ease-in-out infinite;
