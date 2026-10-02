@@ -3,6 +3,7 @@ class SoundEngine {
   private clickAudio: HTMLAudioElement | null = null;
   private saveAudio: HTMLAudioElement | null = null;
   private windAudio: HTMLAudioElement | null = null;
+  private ambientMusic: HTMLAudioElement | null = null;
   private voices: Record<string, HTMLAudioElement> = {};
   private currentVoice: HTMLAudioElement | null = null;
   private isMuted: boolean = false;
@@ -22,6 +23,12 @@ class SoundEngine {
       if (this.windAudio) {
         this.windAudio.volume = 0.10;
         this.windAudio.loop = false; // Do not loop
+      }
+
+      this.ambientMusic = new Audio('/sounds/ambient.mp3');
+      if (this.ambientMusic) {
+        this.ambientMusic.volume = 0.20;
+        this.ambientMusic.loop = true;
       }
 
       // Preload voices
@@ -61,13 +68,14 @@ class SoundEngine {
   }
 
   startWind() {
-    if (this.isMuted || !this.windAudio) return;
-    this.windAudio.play().catch(e => console.log('Audio play prevented:', e));
+    if (this.isMuted) return;
+    if (this.windAudio) this.windAudio.play().catch(e => console.log('Audio play prevented:', e));
+    if (this.ambientMusic) this.ambientMusic.play().catch(e => console.log('Audio play prevented:', e));
   }
 
   stopWind() {
-    if (!this.windAudio) return;
-    this.windAudio.pause();
+    if (this.windAudio) this.windAudio.pause();
+    if (this.ambientMusic) this.ambientMusic.pause();
   }
 
   playVoice(id: string, onStart?: () => void, onEnd?: () => void) {
