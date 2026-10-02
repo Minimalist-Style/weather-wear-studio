@@ -27,7 +27,7 @@ class SoundEngine {
 
       this.ambientMusic = new Audio('/sounds/ambient.mp3');
       if (this.ambientMusic) {
-        this.ambientMusic.volume = 0.20;
+        this.ambientMusic.volume = 0.80;
         this.ambientMusic.loop = true;
       }
 

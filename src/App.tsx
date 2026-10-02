@@ -375,23 +375,35 @@ export default function App() {
   const [lang, setLang] = useState<Lang>("kk");
   const [city, setCity] = useState<City>(getSavedCity);
   
-  // Initialize with a random scenario so the character changes on every refresh
-  const [initialScenario] = useState(() => SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)]);
-
   const [forecast, setForecast] = useState<WeatherData | null>(null),
     [status, setStatus] = useState(""),
     [demo, setDemo] = useState(true),
     [isTalking, setIsTalking] = useState(false),
-    [scenario, setScenario] = useState<string>(initialScenario.id),
+    [scenario, setScenario] = useState<string>("wind"),
     [manual, setManual] = useState<Weather>({
-      temp: initialScenario.temp,
-      feels: initialScenario.temp - (initialScenario.wind >= 25 ? 3 : 0),
-      wind: initialScenario.wind,
-      precip: initialScenario.code === 63 ? 1.4 : 0,
-      code: initialScenario.code,
+      temp: 8,
+      feels: 8,
+      wind: 38,
+      precip: 0,
+      code: 3,
       day: true,
       time: "",
     });
+
+  // Force randomization on mount
+  useEffect(() => {
+    const s = SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)];
+    setScenario(s.id);
+    setManual({
+      temp: s.temp,
+      feels: s.temp - (s.wind >= 25 ? 3 : 0),
+      wind: s.wind,
+      precip: s.code === 63 ? 1.4 : 0,
+      code: s.code,
+      day: true,
+      time: "",
+    });
+  }, []);
   const [query, setQuery] = useState(""),
     [results, setResults] = useState<City[]>([]),
     [searching, setSearching] = useState(false),
