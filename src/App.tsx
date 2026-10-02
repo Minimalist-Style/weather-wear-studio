@@ -759,7 +759,7 @@ export default function App() {
                   <div className="garments">
                     {rec?.items.map((item, i) => (
                       <div className="garment" key={i}>
-                        <span>{item.icon}</span>
+                        <img src={item.iconUrl} alt="" className="garment-img" />
                         <b>{item[lang]}</b>
                       </div>
                     ))}
@@ -839,7 +839,7 @@ export default function App() {
                     </div>
                     <div className="forecast-tail">
                       <span>
-                        {r.items[0]?.icon} {r.title}
+                        {r.items[0] && <img src={r.items[0].iconUrl} alt="" className="garment-img-small" />} {r.title}
                       </span>
                       <ArrowRight size={17} />
                     </div>
@@ -985,7 +985,7 @@ export default function App() {
                       <div className="garments">
                         {rec?.items.map((item, i) => (
                           <div className="garment" key={i}>
-                            <span>{item.icon}</span>
+                            <img src={item.iconUrl} alt="" className="garment-img" />
                             <b>{item[lang]}</b>
                           </div>
                         ))}

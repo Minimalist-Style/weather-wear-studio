@@ -9,20 +9,20 @@ export function weatherKind(code: number): WeatherKind {
   return 'cloud';
 }
 
-export type Garment = { icon: string; kk: string; en: string };
-const g = (icon: string, kk: string, en: string): Garment => ({ icon, kk, en });
-const coat = g('🧥', 'Қалың күрте / Пальто', 'Warm coat');
-const jacket = g('🧥', 'Күрте', 'Jacket');
-const light = g('🧥', 'Жеңіл күрте / Худи', 'Light jacket / Hoodie');
-const tee = g('👕', 'Жеңіл киім', 'Light clothes');
-const boots = g('🥾', 'Жылы / Су өтпейтін етік', 'Warm / Waterproof boots');
-const shoes = g('👟', 'Жабық аяқ киім', 'Closed shoes');
-const gloves = g('🧤', 'Бас киім мен қолғап', 'Hat & gloves');
-const scarf = g('🧣', 'Мойынорағыш', 'Scarf');
-const layer = g('🧶', 'Қосымша жылы қабат / Жемпір', 'Warm sweater / Extra layer');
-const umbrella = g('☂️', 'Қолшатыр / Жаңбырқап', 'Umbrella / Raincoat');
-const cap = g('🧢', 'Кепка / Күнқағар', 'Cap / Sun hat');
-const water = g('💧', 'Ауыз су', 'Water bottle');
+export type Garment = { iconUrl: string; kk: string; en: string };
+const g = (iconUrl: string, kk: string, en: string): Garment => ({ iconUrl, kk, en });
+const coat = g('/icons/coat.png', 'Қалың күрте / Пальто', 'Warm coat');
+const jacket = g('/icons/jacket.png', 'Күрте', 'Jacket');
+const light = g('/icons/hoodie.png', 'Жеңіл күрте / Худи', 'Light jacket / Hoodie');
+const tee = g('/icons/tshirt.png', 'Жеңіл киім', 'Light clothes');
+const boots = g('/icons/boots.png', 'Жылы / Су өтпейтін етік', 'Warm / Waterproof boots');
+const shoes = g('/icons/shoes.png', 'Жабық аяқ киім', 'Closed shoes');
+const gloves = g('/icons/gloves.png', 'Бас киім мен қолғап', 'Hat & gloves');
+const scarf = g('/icons/scarf.png', 'Мойынорағыш', 'Scarf');
+const layer = g('/icons/sweater.png', 'Қосымша жылы қабат / Жемпір', 'Warm sweater / Extra layer');
+const umbrella = g('/icons/umbrella.png', 'Қолшатыр / Жаңбырқап', 'Umbrella / Raincoat');
+const cap = g('/icons/cap.png', 'Кепка / Күнқағар', 'Cap / Sun hat');
+const water = g('/icons/water.png', 'Ауыз су', 'Water bottle');
 
 export function recommend(w: Weather, lang: Lang) {
   const effective = Math.min(w.temp, Number.isFinite(w.feels) ? w.feels : w.temp);

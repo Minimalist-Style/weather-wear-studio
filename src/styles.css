@@ -845,6 +845,20 @@ p {
   font-size: 20px;
 }
 
+.garment-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+.garment-img-small {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
 .outfit-reason {
   margin-top: 19px;
   background: #173b3a;
