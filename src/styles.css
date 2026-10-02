@@ -311,6 +311,7 @@ p {
   border-radius: 52% 48% 47% 53% / 42% 43% 57% 58%;
   isolation: isolate;
   transform-style: preserve-3d;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
   background: linear-gradient(145deg, #dff6f3 0%, #b8e5e2 55%, #93d1cf 100%);
   border: 1px solid rgba(255,255,255,.68);
   box-shadow: 0 30px 60px rgba(18,45,59,.13), inset 0 1px rgba(255,255,255,.68);
