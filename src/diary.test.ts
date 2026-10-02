@@ -36,3 +36,14 @@ describe('Diary CSV Import', () => {
     expect(entries[0].temp).toBe(15);
   });
 });
+import { countUniqueDays } from './diary';
+describe('countUniqueDays', () => {
+  it('counts unique dates for 14-day progress even with multiple entries on the same day', () => {
+    const entries: DiaryEntry[] = [
+      { id: '1', date: '2026-10-01', temp: 10, code: 3, wind: 5, comfort: 'right', note: '' },
+      { id: '2', date: '2026-10-01', temp: 12, code: 3, wind: 5, comfort: 'warm', note: '' },
+      { id: '3', date: '2026-10-02', temp: 8, code: 3, wind: 5, comfort: 'cold', note: '' }
+    ];
+    expect(countUniqueDays(entries)).toBe(2);
+  });
+});
