@@ -554,7 +554,7 @@ export default function App() {
     <div className="app">
       <video
         ref={videoRef}
-        src="/bg-atmosphere.mp4"
+        src="/videos/hero-bg.mp4"
         className="scroll-video-bg"
         autoPlay
         loop
@@ -633,14 +633,19 @@ export default function App() {
               </div>
             </div>
             <div className="intro-art" aria-hidden="true">
-              <video 
-                src="/videos/hero-bg.mp4" 
-                autoPlay 
-                loop 
-                muted 
-                playsInline 
-                className="art-video-bg"
-              />
+              <div className="orbit orbit-a" />
+              <div className="orbit orbit-b" />
+              <div className="art-sun" />
+              <div className="art-cloud a" />
+              <div className="art-cloud b" />
+              <div className="art-floor" />
+              <div className="art-figure">
+                <div className="figure-hood" />
+                <div className="figure-body" />
+                <div className="figure-pocket" />
+                <div className="figure-arm" />
+                <div className="figure-legs" />
+              </div>
               <span className="art-mark one">+08°</span>
               <span className="art-mark two">W/W · 26</span>
             </div>
