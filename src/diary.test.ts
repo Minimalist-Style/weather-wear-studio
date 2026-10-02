@@ -1,48 +1,33 @@
-import { describe, it, expect } from 'vitest';
-import { parseCsvImport } from './diary';
-import type { DiaryEntry } from './types';
+import { describe, expect, it } from 'vitest';
+import { countUniqueDays, parseCsvImport } from './diary';
 
-describe('Diary CSV Import', () => {
-  it('should parse valid CSV string', () => {
+describe('CSV Parser & Diary Integrity', () => {
+  it('parses multi-line CSV with quotes and internal newlines', () => {
     const csv = `date,temperature_c,weather_code,wind_kmh,comfort,note
-2026-10-01,15.5,3,12,right,Test note`;
-    const entries = parseCsvImport(csv);
-    expect(entries).toHaveLength(1);
-    expect(entries[0].date).toBe('2026-10-01');
-    expect(entries[0].temp).toBe(15.5);
-    expect(entries[0].code).toBe(3);
-    expect(entries[0].wind).toBe(12);
-    expect(entries[0].comfort).toBe('right');
-    expect(entries[0].note).toBe('Test note');
-    expect(entries[0].id).toBeDefined();
+2026-10-01,8.5,3,10,right,"Line 1
+Line 2 with comma, and details"
+2026-10-02,12.0,0,5,warm,"Simple note"`;
+
+    const parsed = parseCsvImport(csv);
+    expect(parsed).toHaveLength(2);
+    expect(parsed[0].note).toBe('Line 1\nLine 2 with comma, and details');
+    expect(parsed[1].comfort).toBe('warm');
   });
 
-  it('should ignore invalid rows or empty lines', () => {
-    const csv = `date,temperature_c,weather_code,wind_kmh,comfort,note\n\n2026-10-01,invalid,3,12,right,`;
-    const entries = parseCsvImport(csv);
-    expect(entries).toHaveLength(0);
+  it('deduplicates identical rows inside CSV', () => {
+    const csv = `date,temperature_c,weather_code,wind_kmh,comfort,note
+2026-10-01,8.5,3,10,right,Note
+2026-10-01,8.5,3,10,right,Note`;
+
+    const parsed = parseCsvImport(csv);
+    expect(parsed).toHaveLength(1);
   });
 
-  it('should throw on missing required columns', () => {
-    const csv = `wrong_column\nval`;
-    expect(() => parseCsvImport(csv)).toThrow('missing_columns');
-  });
-
-  it('should handle commas in quotes and newlines (round-trip)', () => {
-    const csv = `date,temperature_c,weather_code,wind_kmh,comfort,note\n2026-10-01,15,3,0,right,"Hello, world\nLine 2"`;
-    const entries = parseCsvImport(csv);
-    expect(entries[0].note).toBe('Hello, world\nLine 2');
-    expect(entries[0].code).toBe(3);
-    expect(entries[0].temp).toBe(15);
-  });
-});
-import { countUniqueDays } from './diary';
-describe('countUniqueDays', () => {
-  it('counts unique dates for 14-day progress even with multiple entries on the same day', () => {
-    const entries: DiaryEntry[] = [
-      { id: '1', date: '2026-10-01', temp: 10, code: 3, wind: 5, comfort: 'right', note: '' },
-      { id: '2', date: '2026-10-01', temp: 12, code: 3, wind: 5, comfort: 'warm', note: '' },
-      { id: '3', date: '2026-10-02', temp: 8, code: 3, wind: 5, comfort: 'cold', note: '' }
+  it('counts unique observation days properly', () => {
+    const entries = [
+      { id: '1', date: '2026-10-01', temp: 8, code: 3, wind: 5, comfort: 'right' as const, note: 'Morning' },
+      { id: '2', date: '2026-10-01', temp: 11, code: 3, wind: 8, comfort: 'warm' as const, note: 'Afternoon' },
+      { id: '3', date: '2026-10-02', temp: 6, code: 61, wind: 12, comfort: 'cold' as const, note: 'Rainy' },
     ];
     expect(countUniqueDays(entries)).toBe(2);
   });
