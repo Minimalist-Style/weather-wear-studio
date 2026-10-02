@@ -687,7 +687,7 @@ export default function App() {
                 {isRain && <div className="art-rain" />}
                 <div className="art-floor" />
                 <div className={`art-figure ${isCold ? 'frost-glow' : ''}`}>
-                  <img src={`/figures/chars/${outfitName}.png`} alt="" className="dynamic-figure-img" />
+                  <img src={`/figures/chars/${isCold ? 'figure-cold' : isRain ? 'figure-rain' : isHot ? 'figure-hot' : 'figure-base'}.png`} alt="" className="dynamic-figure-img" />
                   {isCold && <div className="breath-vapor" />}
                 </div>
               </div>
