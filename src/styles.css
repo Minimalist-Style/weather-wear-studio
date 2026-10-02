@@ -392,57 +392,27 @@ p {
 }
 
 .art-figure {
-  position: absolute; z-index: 4; width: 150px; height: 254px; bottom: 11%; left: 36%;
+  position: absolute; z-index: 4; width: 170px; height: 170px; bottom: 8%; left: 30%;
   transform: translate3d(calc(var(--mouse-x) * 25px), calc(var(--mouse-y) * 12px), 42px);
   transition: transform .18s ease, filter .35s ease;
 }
 
-.figure-hood {
-  position: absolute; width: 93px; height: 96px; top: 0; left: 28px; 
-  border-radius: 50% 50% 42% 42%; 
-  background: radial-gradient(circle at 50% 44%, #efd1ae 0 22%, #805c49 23% 27%, #425a6d 28% 100%); 
-  box-shadow: inset 10px -10px 0 rgba(23,49,66,.22);
+.dynamic-figure-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+  z-index: 10;
+  filter: drop-shadow(5px 15px 12px rgba(18,45,59,.15));
 }
-
-.figure-hood::after { 
-  content: ""; position: absolute; width: 56px; height: 52px; border-radius: 50%; 
-  top: 16px; left: 18px; background: #efd1ae; 
-}
-
-.figure-body {
-  position: absolute; width: 128px; height: 162px; bottom: 0; left: 11px; 
-  border-radius: 48px 48px 24px 24px; 
-  background: linear-gradient(115deg, #7792a1 4%, #416477 54%, #2a4a60 100%); 
-  box-shadow: inset 13px 0 0 rgba(255,255,255,.10), inset -13px -8px 0 rgba(13,42,54,.20);
-}
-
-.figure-body::before, .figure-body::after { 
-  content: ""; position: absolute; bottom: -35px; width: 43px; height: 76px; 
-  border-radius: 10px 10px 18px 18px; background: linear-gradient(100deg, #384c5b, #182f42); 
-}
-
-.figure-body::before { left: 21px; transform: rotate(5deg); }
-.figure-body::after { right: 19px; transform: rotate(-5deg); }
 
 .frost-glow { filter: drop-shadow(0 0 13px rgba(211,246,255,.85)); }
 
 .breath-vapor {
-  position: absolute; top: 59px; right: -13px; width: 38px; height: 26px;
+  position: absolute; top: 10px; right: 10px; width: 38px; height: 26px;
   border-radius: 50%; background: rgba(245,255,255,.62);
   filter: blur(7px); animation: breath 2s ease-out infinite;
-}
-
-.figure-umbrella {
-  position: absolute; top: -39px; left: -28px; width: 203px; height: 72px;
-  border-radius: 110px 110px 22px 22px;
-  background: linear-gradient(160deg,#536d84,#233f57);
-  box-shadow: inset 0 8px rgba(255,255,255,.16);
-  transform: rotate(-8deg);
-}
-
-.figure-umbrella::after { 
-  content: ""; position: absolute; left: 96px; top: 65px; width: 5px; height: 147px; 
-  border-radius: 9px; background: #2c4353; 
+  z-index: 11;
 }
 
 .art-rain {

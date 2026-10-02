@@ -576,6 +576,12 @@ export default function App() {
   const hour = new Date().getHours();
   const isNight = hour < 6 || hour > 20;
 
+  let outfitName = 'figure-1';
+  if (isCold) outfitName = 'figure-9'; // Snowflake pattern
+  else if (isRain) outfitName = 'figure-6'; // Bag
+  else if (isHot) outfitName = 'figure-5'; // Cap
+  else outfitName = 'figure-2'; // Autumn coat
+
   return (
     <div className="app">
       <video
@@ -681,9 +687,7 @@ export default function App() {
                 {isRain && <div className="art-rain" />}
                 <div className="art-floor" />
                 <div className={`art-figure ${isCold ? 'frost-glow' : ''}`}>
-                  <div className="figure-hood" />
-                  <div className="figure-body" />
-                  {isRain && <div className="figure-umbrella" />}
+                  <img src={`/figures/chars/${outfitName}.png`} alt="" className="dynamic-figure-img" />
                   {isCold && <div className="breath-vapor" />}
                 </div>
               </div>
