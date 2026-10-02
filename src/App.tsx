@@ -50,7 +50,7 @@ const SCENARIOS = [
     temp: -16,
     code: 73,
     wind: 18,
-    emoji: "❄️",
+    iconUrl: "/icons/weather-snow.png",
     kk: "Аяз",
     en: "Frost",
   },
@@ -59,7 +59,7 @@ const SCENARIOS = [
     temp: 8,
     code: 3,
     wind: 38,
-    emoji: "💨",
+    iconUrl: "/icons/weather-wind.png",
     kk: "Жел",
     en: "Wind",
   },
@@ -68,7 +68,7 @@ const SCENARIOS = [
     temp: 12,
     code: 63,
     wind: 16,
-    emoji: "🌧️",
+    iconUrl: "/icons/weather-rain.png",
     kk: "Жаңбыр",
     en: "Rain",
   },
@@ -77,7 +77,7 @@ const SCENARIOS = [
     temp: 28,
     code: 0,
     wind: 7,
-    emoji: "☀️",
+    iconUrl: "/icons/weather-sun.png",
     kk: "Ыстық",
     en: "Heat",
   },
@@ -871,7 +871,7 @@ export default function App() {
                     }
                     onClick={() => chooseScenario(s)}
                   >
-                    <span>{s.emoji}</span>
+                    <img src={s.iconUrl} alt="" className="scenario-icon" />
                     {s[lang]} <b>{f(s.temp)}</b>
                   </button>
                 ))}
@@ -921,10 +921,10 @@ export default function App() {
               <div className="condition-grid">
                 {(
                   [
-                    { code: 0, icon: "☀️", name: "sun" },
-                    { code: 3, icon: "☁️", name: "cloud" },
-                    { code: 63, icon: "🌧️", name: "rainy" },
-                    { code: 73, icon: "❄️", name: "snow" },
+                    { code: 0, iconUrl: "/icons/weather-sun.png", name: "sun" },
+                    { code: 3, iconUrl: "/icons/weather-cloud.png", name: "cloud" },
+                    { code: 63, iconUrl: "/icons/weather-rain.png", name: "rainy" },
+                    { code: 73, iconUrl: "/icons/weather-snow.png", name: "snow" },
                   ] as const
                 ).map((x) => (
                   <button
@@ -941,7 +941,7 @@ export default function App() {
                       })
                     }
                   >
-                    <span>{x.icon}</span>
+                    <img src={x.iconUrl} alt="" className="condition-img" />
                     {tx[x.name]}
                   </button>
                 ))}
