@@ -44,6 +44,8 @@ import {
   parseCsvImport,
   countUniqueDays,
 } from "./diary";
+import { soundEngine } from "./soundEngine";
+
 const SCENARIOS = [
   {
     id: "frost",
@@ -322,7 +324,30 @@ export default function App() {
     document
       .querySelectorAll(".reveal-on-scroll")
       .forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+
+    // Global sound effects for all interactive elements
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('button, a, .interactive-card, input[type="radio"]')) {
+        soundEngine.playHover();
+      }
+    };
+    
+    const handleMouseDown = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('button, a, .interactive-card, input[type="radio"]')) {
+        soundEngine.playClick();
+      }
+    };
+
+    document.body.addEventListener('mouseover', handleMouseOver);
+    document.body.addEventListener('mousedown', handleMouseDown);
+
+    return () => {
+      observer.disconnect();
+      document.body.removeEventListener('mouseover', handleMouseOver);
+      document.body.removeEventListener('mousedown', handleMouseDown);
+    };
   }, []);
 
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -473,11 +498,13 @@ export default function App() {
     setObserved("");
     setObservedWind("");
     setNote("");
+    soundEngine.playSave();
   };
   const remove = (id: string) => {
     const updated = entries.filter((x) => x.id !== id);
     setEntries(updated);
     writeDiary(updated);
+    soundEngine.playSave();
   };
   const jump = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -560,6 +587,7 @@ export default function App() {
       writeDiary(final);
       setEntries(final);
       setImportData(null);
+      soundEngine.playSave();
     } catch (e) {
       alert(
         lang === "kk"
