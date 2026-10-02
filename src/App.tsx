@@ -372,19 +372,23 @@ export default function App() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const [lang, setLang] = useState<Lang>("kk"),
-    [city, setCity] = useState<City>(getSavedCity),
-    [forecast, setForecast] = useState<WeatherData | null>(null),
+  const [lang, setLang] = useState<Lang>("kk");
+  const [city, setCity] = useState<City>(getSavedCity);
+  
+  // Initialize with a random scenario so the character changes on every refresh
+  const [initialScenario] = useState(() => SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)]);
+
+  const [forecast, setForecast] = useState<WeatherData | null>(null),
     [status, setStatus] = useState(""),
-    [demo, setDemo] = useState(false),
+    [demo, setDemo] = useState(true),
     [isTalking, setIsTalking] = useState(false),
-    [scenario, setScenario] = useState<string>(""),
+    [scenario, setScenario] = useState<string>(initialScenario.id),
     [manual, setManual] = useState<Weather>({
-      temp: 8,
-      feels: 8,
-      wind: 8,
-      precip: 0,
-      code: 3,
+      temp: initialScenario.temp,
+      feels: initialScenario.temp - (initialScenario.wind >= 25 ? 3 : 0),
+      wind: initialScenario.wind,
+      precip: initialScenario.code === 63 ? 1.4 : 0,
+      code: initialScenario.code,
       day: true,
       time: "",
     });
