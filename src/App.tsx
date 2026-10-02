@@ -1290,6 +1290,10 @@ export default function App() {
             <small>{tx.warning}</small>
           </div>
         </section>
+        
+        <section className="footer-video-section">
+          <video src="/videos/footer-bg.mp4" autoPlay loop muted playsInline className="footer-video-bg" />
+        </section>
       </main>
       <footer className="footer wrap">
         <div className="brand">
