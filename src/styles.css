@@ -399,8 +399,8 @@ p {
   filter: drop-shadow(0px 25px 25px rgba(20, 50, 70, 0.08));
   transform: scale(2.2);
   /* Smoothly fade out the bottom where the toy stand/base is */
-  mask-image: linear-gradient(to bottom, black 88%, transparent 95%);
-  -webkit-mask-image: linear-gradient(to bottom, black 88%, transparent 95%);
+  mask-image: linear-gradient(to bottom, black 75%, transparent 88%);
+  -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 88%);
 }
 
 .talking .dynamic-figure-img {
