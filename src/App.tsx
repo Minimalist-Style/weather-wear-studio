@@ -683,9 +683,6 @@ export default function App() {
                 <div className={`art-figure ${isCold ? 'frost-glow' : ''}`}>
                   <div className="figure-hood" />
                   <div className="figure-body" />
-                  <div className="figure-pocket" />
-                  <div className="figure-arm" />
-                  <div className="figure-legs" />
                   {isRain && <div className="figure-umbrella" />}
                   {isCold && <div className="breath-vapor" />}
                 </div>
