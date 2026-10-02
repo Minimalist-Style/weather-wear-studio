@@ -19,10 +19,12 @@ class SoundEngine {
       if (this.saveAudio) this.saveAudio.volume = 0.25;
       if (this.windAudio) {
         this.windAudio.volume = 0.10;
-        this.windAudio.loop = true;
+        this.windAudio.loop = false; // Do not loop
       }
     }
   }
+
+  private hasPlayedWind = false;
 
   playHover() {
     if (this.isMuted || !this.hoverAudio) return;
@@ -36,7 +38,8 @@ class SoundEngine {
     this.clickAudio.play().catch(e => console.log('Audio play prevented:', e));
     
     // Start wind ambient on first interaction if not playing
-    if (this.windAudio && this.windAudio.paused && !this.isMuted) {
+    if (this.windAudio && !this.hasPlayedWind && !this.isMuted) {
+      this.hasPlayedWind = true;
       this.startWind();
     }
   }
