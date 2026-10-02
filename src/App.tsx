@@ -43,13 +43,28 @@ const GARMENTS: Garment[] = [
   { id: 'water', nameKZ: 'Вода', iconUrl: '/icons/water.png', ayaz: false, jel: true, jaubyir: false, ystyq: true, ashyq: true, bultty: false, qar: false },
 ];
 
+// Звуковые эффекты (короткие mp3)
+const SOUND_HOVER = new Audio('/sounds/ui-hover.mp3');
+const SOUND_CLICK = new Audio('/sounds/ui-click.mp3');
+const SOUND_SAVE = new Audio('/sounds/ui-save.mp3');
+const SOUND_AMBIENT = new Audio('/sounds/ambient-wind.mp3');
+
+// Настройки громкости
+SOUND_HOVER.volume = 0.15;
+SOUND_CLICK.volume = 0.25;
+SOUND_SAVE.volume = 0.35;
+SOUND_AMBIENT.volume = 0.08;
+SOUND_AMBIENT.loop = true;
+
 function App() {
   const [selectedScenarioId, setSelectedScenarioId] = useState<string>('ayaz');
   const [selectedConditionId, setSelectedConditionId] = useState<string>('ashyq');
   const [journalText, setJournalText] = useState('');
   const [journalEntries, setJournalEntries] = useState<{ date: string; text: string }[]>([]);
   const [portalMouse, setPortalMouse] = useState({ x: 0, y: 0 });
+  const [ambientEnabled, setAmbientEnabled] = useState(false);
   const portalRef = useRef<HTMLDivElement>(null);
+  const ambientRef = useRef<HTMLAudioElement>(SOUND_AMBIENT);
 
   const selectedScenario = SCENARIOS.find(s => s.id === selectedScenarioId)!;
   const selectedCondition = CONDITIONS.find(c => c.id === selectedConditionId)!;
@@ -76,6 +91,37 @@ function App() {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  // Включение фонового эмбиента при первом взаимодействии
+  useEffect(() => {
+    const enableAmbient = () => {
+      if (!ambientEnabled && ambientRef.current) {
+        ambientRef.current.play().catch(() => {});
+        setAmbientEnabled(true);
+      }
+    };
+    window.addEventListener('click', enableAmbient, { once: true });
+    window.addEventListener('touchstart', enableAmbient, { once: true });
+    return () => {
+      window.removeEventListener('click', enableAmbient);
+      window.removeEventListener('touchstart', enableAmbient);
+    };
+  }, [ambientEnabled]);
+
+  const playHover = () => {
+    SOUND_HOVER.currentTime = 0;
+    SOUND_HOVER.play().catch(() => {});
+  };
+
+  const playClick = () => {
+    SOUND_CLICK.currentTime = 0;
+    SOUND_CLICK.play().catch(() => {});
+  };
+
+  const playSave = () => {
+    SOUND_SAVE.currentTime = 0;
+    SOUND_SAVE.play().catch(() => {});
+  };
 
   const matchingGarments = GARMENTS.filter(g => {
     const scenarioMatch =
@@ -107,6 +153,7 @@ function App() {
     setJournalEntries(updated);
     localStorage.setItem('weather-journal-entries', JSON.stringify(updated));
     setJournalText('');
+    playSave(); // Звук сохранения
   };
 
   const isCold = selectedScenario.temp <= 0;
@@ -124,8 +171,8 @@ function App() {
           <h1 className="intro-title">Ауа райына байланысты киім таңдау</h1>
           <p className="intro-subtitle">Бұл зерттеу жұмысы ауа райына байланысты киім таңдауға арналған.</p>
           <div className="cta-row">
-            <button className="btn btn-primary">Қосымшаны ашу</button>
-            <button className="btn btn-secondary">Зерттеуді көру</button>
+            <button className="btn btn-primary" onMouseEnter={playHover} onClick={playClick}>Қосымшаны ашу</button>
+            <button className="btn btn-secondary" onMouseEnter={playHover} onClick={playClick}>Зерттеуді көру</button>
           </div>
         </div>
         <div className="intro-right">
@@ -160,7 +207,11 @@ function App() {
             <button
               key={s.id}
               className={`scenario-btn ${selectedScenarioId === s.id ? 'active' : ''}`}
-              onClick={() => setSelectedScenarioId(s.id)}
+              onMouseEnter={playHover}
+              onClick={() => {
+                playClick();
+                setSelectedScenarioId(s.id);
+              }}
             >
               <img src={s.iconUrl} alt="" className="scenario-icon" />
               <span>{s.label}</span>
@@ -172,7 +223,7 @@ function App() {
             <h3 className="lab-subtitle">Киімдер</h3>
             <div className="garments-grid">
               {matchingGarments.map(g => (
-                <div key={g.id} className="garment-card">
+                <div key={g.id} className="garment-card" onMouseEnter={playHover}>
                   <img src={g.iconUrl} alt="" className="garment-img" />
                   <span>{g.nameKZ}</span>
                 </div>
@@ -186,7 +237,11 @@ function App() {
                 <button
                   key={c.id}
                   className={`condition-btn ${selectedConditionId === c.id ? 'active' : ''}`}
-                  onClick={() => setSelectedConditionId(c.id)}
+                  onMouseEnter={playHover}
+                  onClick={() => {
+                    playClick();
+                    setSelectedConditionId(c.id);
+                  }}
                 >
                   <img src={c.iconUrl} alt="" className="condition-img" />
                   <span>{c.label}</span>
@@ -209,12 +264,13 @@ function App() {
             onChange={e => setJournalText(e.target.value)}
             placeholder="Бүгін қандай киім кидің?"
             rows={3}
+            onFocus={playHover}
           />
-          <button className="btn btn-primary" onClick={handleSaveJournal}>Сақтау</button>
+          <button className="btn btn-primary" onMouseEnter={playHover} onClick={handleSaveJournal}>Сақтау</button>
         </div>
         <div className="journal-entries">
           {journalEntries.map((entry, i) => (
-            <div key={i} className="journal-entry">
+            <div key={i} className="journal-entry" onMouseEnter={playHover}>
               <div className="entry-date">{entry.date}</div>
               <div className="entry-text">{entry.text}</div>
             </div>
