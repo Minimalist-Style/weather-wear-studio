@@ -307,38 +307,21 @@ p {
   width: min(100%, 448px);
   aspect-ratio: 0.84;
   position: relative;
-  overflow: hidden;
-  border-radius: 52% 48% 47% 53% / 42% 43% 57% 58%;
+  /* overflow: hidden; -- Removed so elements can float freely */
   isolation: isolate;
   transform-style: preserve-3d;
-  -webkit-mask-image: -webkit-radial-gradient(white, black);
-  background: linear-gradient(145deg, #dff6f3 0%, #b8e5e2 55%, #93d1cf 100%);
-  border: 1px solid rgba(255,255,255,.68);
-  box-shadow: 0 30px 60px rgba(18,45,59,.13), inset 0 1px rgba(255,255,255,.68);
-  transition: transform .18s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
   opacity: 0;
   animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   animation-delay: 450ms;
 }
 
-.intro-art:hover { 
-  box-shadow: 0 42px 80px rgba(18,45,59,.18), inset 0 1px rgba(255,255,255,.78); 
-}
-
-.intro-art::before {
-  content: ""; position: absolute; z-index: 6; inset: 0; pointer-events: none;
-  background: linear-gradient(130deg, rgba(255,255,255,.42), transparent 30%, transparent 66%, rgba(255,255,255,.15));
-  mix-blend-mode: soft-light;
-}
-
-.intro-art::after {
-  content: ""; position: absolute; z-index: 7; inset: 12px; pointer-events: none;
-  border: 1px solid rgba(255,255,255,.36); border-radius: inherit;
+/* Removed glassmorphism shell styling */
+.intro-art::before, .intro-art::after {
+  display: none;
 }
 
 .intro-art.night-mode {
-  background: linear-gradient(145deg, #1a2a3a 0%, #0f1c26 55%, #0a141a 100%);
-  border-color: rgba(255,255,255,.1);
+  /* No background change needed as it's transparent now */
 }
 
 .art-sun {
@@ -380,22 +363,24 @@ p {
 .art-cloud.b { top: 14%; left: 36%; transform: translate3d(calc(var(--mouse-x) * 7px), calc(var(--mouse-y) * 7px), 2px) scale(.67); opacity: .84; animation: floatB 7.4s ease-in-out infinite; }
 
 .art-floor {
-  position: absolute; left: -6%; bottom: -17%; width: 112%; height: 48%;
-  border-radius: 50% 50% 0 0;
-  background: linear-gradient(160deg, #68bba8, #328a78);
-  z-index: 2;
-  transform: translate3d(calc(var(--mouse-x) * 7px), calc(var(--mouse-y) * 4px), 5px) rotate(-5deg);
+  display: none; /* Removed the green floor */
 }
 
 .art-floor::after { 
-  content: ""; position: absolute; left: 12%; top: 19%; width: 74%; height: 36%; 
-  border-radius: 50%; background: rgba(244,255,237,.14); filter: blur(10px); 
+  display: none;
 }
 
 .art-figure {
   position: absolute; z-index: 4; width: 170px; height: 170px; bottom: 8%; left: 30%;
   transform: translate3d(calc(var(--mouse-x) * 25px), calc(var(--mouse-y) * 12px), 42px);
   transition: transform .18s ease, filter .35s ease;
+  animation: figureBreathe 4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes figureBreathe {
+  0%, 100% { transform: translate3d(calc(var(--mouse-x) * 25px), calc(var(--mouse-y) * 12px), 42px) scaleY(1); }
+  50% { transform: translate3d(calc(var(--mouse-x) * 25px), calc(var(--mouse-y) * 12px), 42px) scaleY(1.03); }
 }
 
 .dynamic-figure-img {
