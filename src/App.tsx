@@ -619,8 +619,8 @@ export default function App() {
       );
     }
   };
-  const currentTemp = forecast?.now.temp ?? 8;
-  const currentCode = forecast?.now.code ?? 3;
+  const currentTemp = demo ? manual.temp : forecast?.now.temp ?? 8;
+  const currentCode = demo ? manual.code : forecast?.now.code ?? 3;
   const isCold = currentTemp <= 0;
   const isRain = [61, 63, 65, 80, 81, 82, 95, 96, 99].includes(currentCode);
   const isHot = currentTemp >= 25;
