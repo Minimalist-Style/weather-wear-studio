@@ -377,6 +377,7 @@ export default function App() {
     [forecast, setForecast] = useState<WeatherData | null>(null),
     [status, setStatus] = useState(""),
     [demo, setDemo] = useState(false),
+    [isTalking, setIsTalking] = useState(false),
     [scenario, setScenario] = useState<string>(""),
     [manual, setManual] = useState<Weather>({
       temp: 8,
@@ -467,6 +468,12 @@ export default function App() {
       day: true,
       time: "",
     });
+    
+    soundEngine.playVoice(
+      s.id,
+      () => setIsTalking(true),
+      () => setIsTalking(false)
+    );
   };
   const onSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -714,7 +721,7 @@ export default function App() {
                 <div className="art-cloud b" />
                 {isRain && <div className="art-rain" />}
                 <div className="art-floor" />
-                <div className={`art-figure ${isCold ? 'frost-glow' : ''}`}>
+                <div className={`art-figure ${isCold ? 'frost-glow' : ''} ${isTalking ? 'talking' : ''}`}>
                   <img src={`/figures/chars/${isCold ? 'figure-cold' : isRain ? 'figure-rain' : isHot ? 'figure-hot' : 'figure-base'}.png`} alt="" className="dynamic-figure-img" />
                   {isCold && <div className="breath-vapor" />}
                 </div>

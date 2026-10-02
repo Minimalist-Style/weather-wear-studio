@@ -383,6 +383,11 @@ p {
   50% { transform: translate3d(calc(var(--mouse-x) * 25px), calc(var(--mouse-y) * 12px), 42px) scaleY(1.03); }
 }
 
+@keyframes figureTalk {
+  0%, 100% { transform: translate3d(calc(var(--mouse-x) * 25px), calc(var(--mouse-y) * 12px), 42px) scaleY(1); }
+  50% { transform: translate3d(calc(var(--mouse-x) * 25px), calc(var(--mouse-y) * 12px), 42px) scaleY(1.03) translateY(-3px); }
+}
+
 .dynamic-figure-img {
   width: 100%;
   height: 100%;
@@ -396,6 +401,10 @@ p {
   /* Smoothly fade out the bottom where the toy stand/base is */
   mask-image: linear-gradient(to bottom, black 88%, transparent 95%);
   -webkit-mask-image: linear-gradient(to bottom, black 88%, transparent 95%);
+}
+
+.talking .dynamic-figure-img {
+  animation: figureTalk 0.4s ease-in-out infinite;
 }
 
 .frost-glow { filter: drop-shadow(0 0 13px rgba(211,246,255,.85)); }
