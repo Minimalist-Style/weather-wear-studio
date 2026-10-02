@@ -326,8 +326,26 @@ export default function App() {
   }, []);
 
   const videoRef = useRef<HTMLVideoElement>(null);
+  
+  const [portalMouse, setPortalMouse] = useState({ x: 0, y: 0 });
+  const portalRef = useRef<HTMLDivElement>(null);
 
-
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!portalRef.current) return;
+      const rect = portalRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const x = (e.clientX - centerX) / (rect.width / 2);
+      const y = (e.clientY - centerY) / (rect.height / 2);
+      setPortalMouse({ 
+        x: Math.max(-1, Math.min(1, x)), 
+        y: Math.max(-1, Math.min(1, y)) 
+      });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   const [lang, setLang] = useState<Lang>("kk"),
     [city, setCity] = useState<City>(getSavedCity),
@@ -550,6 +568,14 @@ export default function App() {
       );
     }
   };
+  const currentTemp = forecast?.now.temp ?? 8;
+  const currentCode = forecast?.now.code ?? 3;
+  const isCold = currentTemp <= 0;
+  const isRain = [61, 63, 65, 80, 81, 82, 95, 96, 99].includes(currentCode);
+  const isHot = currentTemp >= 25;
+  const hour = new Date().getHours();
+  const isNight = hour < 6 || hour > 20;
+
   return (
     <div className="app">
       <video
@@ -600,7 +626,7 @@ export default function App() {
       <main id="home">
         <div className="mobile-reverse-wrap">
           <section className="intro wrap">
-            <div className="intro-content">
+            <div className="intro-left">
               <div className="tiny-label">
                 <span className="dot" />
                 {tx.tag}
@@ -614,14 +640,20 @@ export default function App() {
               <div className="intro-actions">
                 <button
                   className="button primary"
-                  onClick={() => jump("today")}
+                  onClick={() => {
+                    jump("today");
+                    if (navigator.vibrate) navigator.vibrate(8);
+                  }}
                 >
                   {tx.app}
                   <ArrowRight size={18} />
                 </button>
                 <button
                   className="button subdued"
-                  onClick={() => jump("about")}
+                  onClick={() => {
+                    jump("about");
+                    if (navigator.vibrate) navigator.vibrate(8);
+                  }}
                 >
                   {tx.research}
                   <ExternalLink size={16} />
@@ -632,22 +664,32 @@ export default function App() {
                 <span>DESIGNED FOR CURIOUS MINDS</span>
               </div>
             </div>
-            <div className="intro-art" aria-hidden="true">
-              <div className="orbit orbit-a" />
-              <div className="orbit orbit-b" />
-              <div className="art-sun" />
-              <div className="art-cloud a" />
-              <div className="art-cloud b" />
-              <div className="art-floor" />
-              <div className="art-figure">
-                <div className="figure-hood" />
-                <div className="figure-body" />
-                <div className="figure-pocket" />
-                <div className="figure-arm" />
-                <div className="figure-legs" />
+            <div className="intro-right">
+              <div 
+                ref={portalRef}
+                className={`intro-art ${isNight ? 'night-mode' : ''}`}
+                id="heroPortal"
+                style={{
+                  '--mouse-x': portalMouse.x,
+                  '--mouse-y': portalMouse.y,
+                  transform: `perspective(800px) rotateY(${portalMouse.x * 8}deg) rotateX(${-portalMouse.y * 8}deg)`,
+                } as React.CSSProperties}
+              >
+                <div className={`art-sun ${isHot ? 'pulse-hot' : ''}`} />
+                <div className="art-cloud a" />
+                <div className="art-cloud b" />
+                {isRain && <div className="art-rain" />}
+                <div className="art-floor" />
+                <div className={`art-figure ${isCold ? 'frost-glow' : ''}`}>
+                  <div className="figure-hood" />
+                  <div className="figure-body" />
+                  <div className="figure-pocket" />
+                  <div className="figure-arm" />
+                  <div className="figure-legs" />
+                  {isRain && <div className="figure-umbrella" />}
+                  {isCold && <div className="breath-vapor" />}
+                </div>
               </div>
-              <span className="art-mark one">+08°</span>
-              <span className="art-mark two">W/W · 26</span>
             </div>
           </section>
           <section className="dashboard wrap reveal-on-scroll" id="today">
